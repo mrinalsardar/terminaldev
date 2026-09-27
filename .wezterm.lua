@@ -27,6 +27,11 @@ local SUPER_REV = 'ALT|CTRL'
 
 config.leader = { key = 'Space', mods = SUPER_REV, timeout_milliseconds = 1000 } 
 
+---------------------------------------------------------------------------
+-- for VDI/old GPU setup where wezterm doesn't open
+-- config.front_end = "Software"
+------------------------------------------------------------------------- 
+
 -------------------------------------------------------------------------- 
 -- Shell / launch menu (Windows 11, PowerShell-first) 
 -------------------------------------------------------------------------- 
