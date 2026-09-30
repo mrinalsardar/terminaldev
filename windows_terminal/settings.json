@@ -1,0 +1,191 @@
+// Windows Terminal settings.json
+// Replicates ~/.wezterm.lua as closely as Windows Terminal allows.
+//   SUPER     (WezTerm) -> Alt
+//   SUPER_REV (WezTerm) -> Alt+Ctrl
+// Location: %LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+// (or ...WindowsTerminalPreview_8wekyb3d8bbwe for Preview). Comments are allowed in this file.
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+
+    // ---------------------------------------------------------------- Startup / shell
+    "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}", // Windows PowerShell (powershell.exe -NoLogo)
+    "launchMode": "maximized",                                   // gui-startup -> maximize()
+    "disabledProfileSources": ["Windows.Terminal.Wsl"],          // hide auto "Ubuntu"; use explicit "WSL - Ubuntu" below
+
+    // ---------------------------------------------------------------- Window / tabs
+    "theme": "wezterm-mocha",
+    "alwaysShowTabs": true,                // hide_tab_bar_if_only_one_tab = false
+    "showTabsInTitlebar": false,           // WezTerm's retro tab bar sits below the title bar
+    "confirmCloseAllTabs": true,           // closest match to window_close_confirmation (see notes)
+    "copyOnSelect": false,
+    "bellStyle": ["window"],               // closest match to visual_bell
+
+    // ---------------------------------------------------------------- Key bindings
+    "actions": [
+        // --- Unbind WT defaults that would clash with the Alt-based scheme (WezTerm passes these to the shell)
+        { "command": "unbound", "keys": "alt+up" },
+        { "command": "unbound", "keys": "alt+down" },
+
+        // --- Misc / useful
+        { "command": "toggleMarkMode",       "keys": "f1" },   // ActivateCopyMode
+        { "command": "commandPalette",       "keys": "f2" },   // ActivateCommandPalette
+        { "command": "openNewTabDropdown",   "keys": "f3" },   // ShowLauncher
+        { "command": "tabSearch",            "keys": "f4" },   // Launcher FUZZY|TABS
+        { "command": "toggleFullscreen",     "keys": "f11" },
+        { "command": "find",                 "keys": "alt+f" }, // Search
+
+        // --- Copy / paste
+        { "command": { "action": "copy", "singleLine": false }, "keys": "ctrl+shift+c" },
+        { "command": "paste",                                   "keys": "ctrl+shift+v" },
+
+        // --- Cursor movement (Alt+Left/Right -> Home/End, same escape sequences as WezTerm)
+        { "command": { "action": "sendInput", "input": "\u001bOH" }, "keys": "alt+left" },
+        { "command": { "action": "sendInput", "input": "\u001bOF" }, "keys": "alt+right" },
+
+        // --- Tabs: spawn / close
+        { "command": { "action": "newTab" },                         "keys": "alt+t" },
+        { "command": { "action": "newTab", "profile": "WSL - Ubuntu" }, "keys": "alt+ctrl+t" },
+        { "command": "closeTab",                                     "keys": "alt+ctrl+w" },
+
+        // --- Tabs: navigation (kept exactly as in your config: [ = next, ] = previous)
+        { "command": { "action": "nextTab", "tabSwitcherMode": "disabled" }, "keys": "alt+[" },
+        { "command": { "action": "prevTab", "tabSwitcherMode": "disabled" }, "keys": "alt+]" },
+        { "command": { "action": "moveTab", "direction": "backward" },       "keys": "alt+ctrl+[" },
+        { "command": { "action": "moveTab", "direction": "forward" },        "keys": "alt+ctrl+]" },
+
+        // --- Tabs: rename (opens inline editor in the tab)
+        { "command": "openTabRenamer", "keys": "alt+0" },
+
+        // --- Windows
+        { "command": "newWindow", "keys": "alt+n" },
+
+        // --- Panes: split
+        { "command": { "action": "splitPane", "split": "right", "splitMode": "duplicate" }, "keys": "alt+\\" },      // SplitHorizontal
+        { "command": { "action": "splitPane", "split": "down",  "splitMode": "duplicate" }, "keys": "alt+ctrl+\\" }, // SplitVertical
+
+        // --- Panes: zoom / close (alt+enter overrides WT's default fullscreen binding)
+        { "command": "togglePaneZoom", "keys": "alt+enter" },
+        { "command": "closePane",      "keys": "alt+w" },
+
+        // --- Panes: navigation
+        { "command": { "action": "moveFocus", "direction": "up" },    "keys": "alt+ctrl+k" },
+        { "command": { "action": "moveFocus", "direction": "down" },  "keys": "alt+ctrl+j" },
+        { "command": { "action": "moveFocus", "direction": "left" },  "keys": "alt+ctrl+h" },
+        { "command": { "action": "moveFocus", "direction": "right" }, "keys": "alt+ctrl+l" },
+
+        // --- Scrolling
+        { "command": { "action": "scrollUp",   "rowsToScroll": 5 }, "keys": "alt+u" },
+        { "command": { "action": "scrollDown", "rowsToScroll": 5 }, "keys": "alt+d" },
+        { "command": "scrollUpPage",   "keys": "pgup" },
+        { "command": "scrollDownPage", "keys": "pgdn" }
+    ],
+
+    // ---------------------------------------------------------------- Profiles
+    "profiles": {
+        "defaults": {
+            "colorScheme": "Catppuccin Mocha",
+            "font": {
+                "face": "JetBrainsMono Nerd Font, Segoe UI Emoji",
+                "size": 11,
+                "weight": "normal",
+                "cellHeight": "1.1"                 // line_height = 1.1
+            },
+            "cursorShape": "filledBox",             // BlinkingBlock (blink is controlled by Windows, see notes)
+            "padding": "0, 10, 0, 7.5",             // left, top, right, bottom
+            "scrollbarState": "visible",
+            "unfocusedAppearance": {                // approximates inactive_pane_hsb brightness = 0.75
+                "colorScheme": "Catppuccin Mocha Dimmed"
+            }
+        },
+        "list": [
+            {
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "name": "Windows PowerShell",
+                "commandline": "powershell.exe -NoLogo",
+                "hidden": false
+            },
+            {
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "name": "Command Prompt",
+                "commandline": "cmd.exe",
+                "hidden": false
+            },
+            {
+                "guid": "{5c1c4f0a-7b2e-4d6a-9f3e-2b8a1d7e4c90}",
+                "name": "WSL - Ubuntu",
+                "commandline": "wsl.exe ~ -d Ubuntu",
+                "hidden": false
+            }
+        ]
+    },
+
+    // ---------------------------------------------------------------- Color schemes
+    "schemes": [
+        {
+            "name": "Catppuccin Mocha",
+            "cursorColor": "#F5E0DC",
+            "selectionBackground": "#585B70",
+            "background": "#1E1E2E",
+            "foreground": "#CDD6F4",
+            "black": "#45475A",
+            "red": "#F38BA8",
+            "green": "#A6E3A1",
+            "yellow": "#F9E2AF",
+            "blue": "#89B4FA",
+            "purple": "#F5C2E7",
+            "cyan": "#94E2D5",
+            "white": "#BAC2DE",
+            "brightBlack": "#585B70",
+            "brightRed": "#F38BA8",
+            "brightGreen": "#A6E3A1",
+            "brightYellow": "#F9E2AF",
+            "brightBlue": "#89B4FA",
+            "brightPurple": "#F5C2E7",
+            "brightCyan": "#94E2D5",
+            "brightWhite": "#A6ADC8"
+        },
+        {
+            // Catppuccin Mocha at ~75% brightness, used for unfocused panes
+            "name": "Catppuccin Mocha Dimmed",
+            "cursorColor": "#B8A8A5",
+            "selectionBackground": "#424454",
+            "background": "#171723",
+            "foreground": "#9AA1B7",
+            "black": "#343544",
+            "red": "#B6687E",
+            "green": "#7DAA79",
+            "yellow": "#BBAA83",
+            "blue": "#6787BC",
+            "purple": "#B892AD",
+            "cyan": "#6FAAA0",
+            "white": "#8C92A7",
+            "brightBlack": "#424454",
+            "brightRed": "#B6687E",
+            "brightGreen": "#7DAA79",
+            "brightYellow": "#BBAA83",
+            "brightBlue": "#6787BC",
+            "brightPurple": "#B892AD",
+            "brightCyan": "#6FAAA0",
+            "brightWhite": "#7D8296"
+        }
+    ],
+
+    // ---------------------------------------------------------------- Theme (tab bar colors from format-tab-title)
+    "themes": [
+        {
+            "name": "wezterm-mocha",
+            "window": { "applicationTheme": "dark" },
+            "tab": {
+                "background": "#89B4FAFF",           // active tab (WezTerm: #89b4fa)
+                "unfocusedBackground": "#1E1E2EFF",  // inactive tabs (WezTerm: #1e1e2e)
+                "showCloseButton": "hover"
+            },
+            "tabRow": {
+                "background": "#0F0F14FF",           // WezTerm tab-bar edge color
+                "unfocusedBackground": "#0F0F14FF"
+            }
+        }
+    ]
+}
+
